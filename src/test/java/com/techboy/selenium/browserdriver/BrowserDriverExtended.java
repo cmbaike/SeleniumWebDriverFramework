@@ -110,10 +110,4 @@ public class BrowserDriverExtended {
             return sizzleSelector.findElementsBySizzleCss(using);
         }
     }
-
-    public BrowserDriverExtended browserDriverExtended(){
-        return  new BrowserDriverExtended();
-    }
-
-
 }
