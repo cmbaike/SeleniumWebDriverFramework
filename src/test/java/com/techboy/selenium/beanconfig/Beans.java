@@ -5,17 +5,19 @@ import com.techboy.selenium.config.BrowserCapabilities;
 import org.openqa.selenium.Proxy;
 import org.springframework.context.annotation.*;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 
 /**
  * Created by christopher on 01/12/2015.
  */
-
-@ComponentScan(basePackageClasses = {Beans.class})
 @Configuration
+@Component
 public class Beans {
 
     String workingDir = System.getProperty("user.dir");
@@ -53,19 +55,18 @@ public class Beans {
     }
 
     @PostConstruct
-    public void systemPath(){
+    public void systemPath() throws IOException {
         if (workingOS.contains("windows")) {
-              System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
+              System.setProperty("webdriver.chrome.driver", new File(".").getCanonicalPath()+"/src/test/resources/selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
         } else if (workingOS.contains("mac")) {
-             System.setProperty("webdriver.chrome.driver", "/Users/christopher/IdeaProjects/BDDWebDriverFramework/src/test/resources/selenium_browser_drivers/macChromedriver/chromedriver");
+             System.setProperty("webdriver.chrome.driver", new File(".").getCanonicalPath()+"/src/test/resources/selenium_browser_drivers/macChromedriver/chromedriver");
         } else if (workingOS.contains("linux")) {
-            System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/linuxChromedriver/chromedriver");
+            System.setProperty("webdriver.chrome.driver", new File(".").getCanonicalPath()+"/src/test/resources/selenium_browser_drivers/linuxChromedriver/chromedriver");
         }
 
     }
 
     public static class FirefoxCondition implements Condition {
-
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             return browser.contentEquals("firefox") || browser.contentEquals("");
