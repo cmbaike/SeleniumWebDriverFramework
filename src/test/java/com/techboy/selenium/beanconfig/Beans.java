@@ -18,7 +18,6 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 @Configuration
 public class Beans {
 
-    String workingDir = System.getProperty("user.dir");
     private String workingOS = System.getProperty("os.name").toLowerCase();
     private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
     private final String proxyHostname = System.getProperty("proxyHost");
