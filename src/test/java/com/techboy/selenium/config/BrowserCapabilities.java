@@ -20,15 +20,19 @@ public class BrowserCapabilities extends DesiredCapabilities implements BrowserS
 
     private BrowserCapabilities(){}
 
-    @Autowired(required=false)
-    public DesiredCapabilities getFirefoxCapabilities(Proxy proxy) {
+    @Autowired
+    private Proxy proxy;
+
+
+    public DesiredCapabilities getFirefoxCapabilities() {
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
         return addProxySettings(capabilities, proxy);
     }
 
-    @Autowired(required=false)
-    public DesiredCapabilities getChromeCapabilities(Proxy proxy) {
+
+    public DesiredCapabilities getChromeCapabilities() {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        System.setProperty("webdriver.chrome.driver", "selenium_standalone/linux/googlechrome/64bit/chromedriver");
         capabilities.setCapability("chrome.switches", Arrays.asList("--no-default-browser-check"));
         HashMap<String, String> chromePreferences = new HashMap<String, String>();
         chromePreferences.put("profile.password_manager_enabled", "false");
@@ -36,8 +40,8 @@ public class BrowserCapabilities extends DesiredCapabilities implements BrowserS
         return addProxySettings(capabilities, proxy);
     }
 
-    @Autowired(required=false)
-    public DesiredCapabilities getIECapabilities(Proxy proxy) {
+
+    public DesiredCapabilities getIECapabilities() {
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         capabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, true);

@@ -8,8 +8,8 @@ import org.openqa.selenium.Proxy;
 
 public interface BrowserService <T> {
 
-    T getFirefoxCapabilities(Proxy proxy);
-    T getChromeCapabilities(Proxy proxy);
-    T getIECapabilities(Proxy proxy);
+    T getFirefoxCapabilities();
+    T getChromeCapabilities();
+    T getIECapabilities();
 
 }

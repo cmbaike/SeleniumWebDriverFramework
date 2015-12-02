@@ -6,6 +6,7 @@ import com.techboy.selenium.config.BrowserThread;
 import org.openqa.selenium.Proxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
@@ -36,20 +37,19 @@ public class Beans {
         }
        return new Proxy();
     }
-
    @Bean
+   @Conditional(BeanCondition.FirefoxCondition.class)
     public BrowserDriverExtended.FirefoxDriverExtended firefox(){
-        return new BrowserDriverExtended.FirefoxDriverExtended(BrowserCapabilities.newInstance().getFirefoxCapabilities(proxy()));
+        return new BrowserDriverExtended.FirefoxDriverExtended(BrowserCapabilities.newInstance().getFirefoxCapabilities());
     }
 
 
-
-
-  /*  @Bean
+    @Bean
+    @Conditional(BeanCondition.ChromeCondition.class)
     public BrowserDriverExtended.ChromeDriverExtended chrome(){
-        return new BrowserDriverExtended.ChromeDriverExtended(BrowserCapabilities.newInstance().getChromeCapabilities(proxy()));
-}
-
+        return new BrowserDriverExtended.ChromeDriverExtended(BrowserCapabilities.newInstance().getChromeCapabilities());
+    }
+/*
     @Bean
     public BrowserDriverExtended.InternetExplorerDriverExtended internetExplorer(){
         return new BrowserDriverExtended.InternetExplorerDriverExtended(BrowserCapabilities.newInstance().getIECapabilities(proxy()));
