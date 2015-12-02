@@ -4,8 +4,8 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -20,7 +20,7 @@ public class BrowserCapabilities extends DesiredCapabilities implements BrowserS
 
     private BrowserCapabilities(){}
 
-    @Autowired
+    @Inject
     private Proxy proxy;
 
 
@@ -32,14 +32,12 @@ public class BrowserCapabilities extends DesiredCapabilities implements BrowserS
 
     public DesiredCapabilities getChromeCapabilities() {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        System.setProperty("webdriver.chrome.driver", "selenium_standalone/linux/googlechrome/64bit/chromedriver");
         capabilities.setCapability("chrome.switches", Arrays.asList("--no-default-browser-check"));
         HashMap<String, String> chromePreferences = new HashMap<String, String>();
         chromePreferences.put("profile.password_manager_enabled", "false");
         capabilities.setCapability("chrome.prefs", chromePreferences);
         return addProxySettings(capabilities, proxy);
     }
-
 
     public DesiredCapabilities getIECapabilities() {
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();

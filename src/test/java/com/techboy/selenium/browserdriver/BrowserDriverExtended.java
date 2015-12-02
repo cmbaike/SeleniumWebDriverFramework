@@ -1,18 +1,19 @@
 package com.techboy.selenium.browserdriver;
 
-import com.techboy.selenium.helper.SizzleSelector;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by christopher on 01/12/2015.
  */
+@Component
 public class BrowserDriverExtended {
     /**
      * Sizzle CSS Selector implementation
@@ -108,6 +109,10 @@ public class BrowserDriverExtended {
         public List<WebElement> findElementsByCssSelector(String using) {
             return sizzleSelector.findElementsBySizzleCss(using);
         }
+    }
+
+    public BrowserDriverExtended browserDriverExtended(){
+        return  new BrowserDriverExtended();
     }
 
 
