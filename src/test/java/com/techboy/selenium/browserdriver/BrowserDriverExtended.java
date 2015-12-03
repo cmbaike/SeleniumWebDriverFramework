@@ -18,6 +18,9 @@ public class BrowserDriverExtended {
     /**
      * Sizzle CSS Selector implementation
      */
+
+    private BrowserDriverExtended(){}
+
     private static SizzleSelector sizzleSelector;
 
     public static class FirefoxDriverExtended extends FirefoxDriver {

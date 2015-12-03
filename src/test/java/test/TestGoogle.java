@@ -1,6 +1,6 @@
 package test;
 
-import com.techboy.selenium.beanconfig.Beans;
+import com.techboy.selenium.beanconfig.BeanConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=Beans.class)
+@ContextConfiguration(classes=BeanConfig.class)
 public class TestGoogle {
 
 
