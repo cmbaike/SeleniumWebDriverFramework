@@ -10,6 +10,8 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 
@@ -21,19 +23,24 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 @Configuration
 public class BeanConfig {
 
-
-    private String workingOS = System.getProperty("os.name").toLowerCase();
     private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
     private final String proxyHostname = System.getProperty("proxyHost");
     private final Integer proxyPort = Integer.getInteger("proxyPort");
     private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
+    private String workingOS = System.getProperty("os.name").toLowerCase();
 
+    @Bean
+    public
+    static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     /**
      * @Code Initialize system path variables for browsers
      */
     @PostConstruct
     public void systemPath() throws IOException {
+
         if (workingOS.contains("windows")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
         } else if (workingOS.contains("mac")) {
@@ -43,7 +50,6 @@ public class BeanConfig {
         }
 
     }
-
 
     /**
      * @Code Proxy bean generator
@@ -73,7 +79,7 @@ public class BeanConfig {
      * @Code firefox bean generator
      */
     @Bean(destroyMethod = "quit")
-    @Conditional(BeanConfig.FirefoxCondition.class)
+    @Conditional(BeanConfig.DefaultFirefoxCondition.class)
     public BrowserDriverExtended.FirefoxDriverExtended firefox() {
         return new BrowserDriverExtended.FirefoxDriverExtended(BrowserCapabilities.newInstance().getFirefoxCapabilities());
     }
@@ -88,15 +94,22 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Condition for creating firefox browser bean
+     * @Code Condition for creating firefox browser bean as default
      */
-    private static class FirefoxCondition implements Condition {
+    private static class DefaultFirefoxCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser").equalsIgnoreCase("firefox") || env.getProperty("browser").equalsIgnoreCase("");
+            Boolean b;
+            String browserList[] = new String[]{"chrome", "ie"};
+            List<String> browser = Arrays.asList(browserList);
+            if (browser.contains(env.getProperty("browser", "firefox").toLowerCase())) {
+                b = false;
+            } else {
+                b = true;
+            }
+            return b;
         }
-
     }
 
     /**
@@ -106,7 +119,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser").equalsIgnoreCase("chrome");
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome");
         }
 
     }
@@ -119,14 +132,8 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser").equalsIgnoreCase("IE");
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE");
         }
-    }
-
-    @Bean
-    public
-    static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 
 }
