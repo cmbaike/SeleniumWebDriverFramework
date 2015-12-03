@@ -61,6 +61,15 @@ public class BeanConfig {
     }
 
     /**
+     * @Code internetExplorer bean generator
+     */
+    @Bean(destroyMethod = "quit")
+    @Conditional(BeanConfig.IECondition.class)
+    public BrowserDriverExtended.InternetExplorerDriverExtended internetExplorer() {
+        return new BrowserDriverExtended.InternetExplorerDriverExtended(BrowserCapabilities.newInstance().getIECapabilities());
+    }
+
+    /**
      * @Code firefox bean generator
      */
     @Bean(destroyMethod = "quit")
