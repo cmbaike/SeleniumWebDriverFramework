@@ -3,7 +3,9 @@ package com.techboy.selenium.beanconfig;
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
 import org.openqa.selenium.Proxy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -20,6 +22,8 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 @Configuration
 public class Beans  {
 
+    @Value("${browser}") String artist;
+
     @Inject
     Environment env;
 
@@ -33,6 +37,9 @@ public class Beans  {
 
     @PostConstruct
     public void systemPath() throws IOException {
+
+        System.out.println(artist);
+
         if (workingOS.contains("windows")) {
             System.setProperty("webdriver.chrome.driver","selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
         } else if (workingOS.contains("mac")) {
@@ -91,7 +98,11 @@ public class Beans  {
         }
     }
 
-
+    @Bean
+    public
+    static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
 
 
