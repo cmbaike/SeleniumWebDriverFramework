@@ -43,6 +43,7 @@ public class BeanConfig {
 
         if (workingOS.contains("windows")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
+            System.setProperty("webdriver.ie.driver", "selenium_browser_drivers\\IEDriverServer.exe");
         } else if (workingOS.contains("mac")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/macChromedriver/chromedriver");
         } else if (workingOS.contains("linux")) {
