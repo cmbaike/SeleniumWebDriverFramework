@@ -34,7 +34,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Initialize system path variables for browsers
+     * @link Initialize system path variables for browsers
      */
     @PostConstruct
     public void systemPath() throws IOException {
@@ -51,11 +51,11 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Proxy bean generator
+     * @link Proxy bean generator
      */
     @Bean
     public Proxy proxy() {
-        Proxy proxy = null;
+        Proxy proxy;
         if (proxyEnabled) {
             proxy = new Proxy();
             proxy.setProxyType(MANUAL);
@@ -66,7 +66,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code internetExplorer bean generator
+     * @link internetExplorer bean generator
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.IECondition.class)
@@ -75,7 +75,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code firefox bean generator
+     * @link firefox bean generator
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.DefaultFirefoxCondition.class)
@@ -84,7 +84,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Chrome bean generator
+     * @link Chrome bean generator
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.ChromeCondition.class)
@@ -93,24 +93,19 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Condition for creating firefox browser bean as default
+     * @link Condition for creating firefox browser bean as default
      */
     private static class DefaultFirefoxCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            Boolean b;
-            if (env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")&&env.getProperty("remote", "false").equalsIgnoreCase("false")) {
-                b = true;
-            } else {
-                b = false;
-            }
-            return b;
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
+
         }
     }
 
     /**
-     * @Code Condition for creating chrome browser bean
+     * @link Condition for creating chrome browser bean
      */
     private static class ChromeCondition implements Condition {
         @Override
@@ -122,7 +117,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Condition for creating IE browser bean
+     * @link Condition for creating IE browser bean
      */
 
     private static class IECondition implements Condition {
@@ -134,7 +129,7 @@ public class BeanConfig {
     }
 
     /**
-     * @Code Condition for creating RemoteWebDriver browser bean
+     * @link Condition for creating RemoteWebDriver browser bean
      */
     private static class RemoteWebDriverCondition implements Condition {
         @Override
