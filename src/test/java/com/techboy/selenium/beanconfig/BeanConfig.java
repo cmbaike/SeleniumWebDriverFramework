@@ -10,8 +10,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 
@@ -102,12 +100,10 @@ public class BeanConfig {
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
             Boolean b;
-            String browserList[] = new String[]{"chrome", "ie"};
-            List<String> browserStore = Arrays.asList(browserList);
-            if (browserStore.contains(env.getProperty("browser", "firefox").toLowerCase())) {
-                b = false;
-            } else {
+            if (env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")&&env.getProperty("remote", "false").equalsIgnoreCase("false")) {
                 b = true;
+            } else {
+                b = false;
             }
             return b;
         }
@@ -120,7 +116,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome");
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
         }
 
     }
@@ -133,7 +129,18 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE");
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
+        }
+    }
+
+    /**
+     * @Code Condition for creating RemoteWebDriver browser bean
+     */
+    private static class RemoteWebDriverCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env = context.getEnvironment();
+            return env.getProperty("remote", "false").equalsIgnoreCase("true");
         }
     }
 
