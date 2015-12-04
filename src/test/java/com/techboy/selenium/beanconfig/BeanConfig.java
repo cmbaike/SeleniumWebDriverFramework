@@ -103,8 +103,8 @@ public class BeanConfig {
             Environment env = context.getEnvironment();
             Boolean b;
             String browserList[] = new String[]{"chrome", "ie"};
-            List<String> browser = Arrays.asList(browserList);
-            if (browser.contains(env.getProperty("browser", "firefox").toLowerCase())) {
+            List<String> browserStore = Arrays.asList(browserList);
+            if (browserStore.contains(env.getProperty("browser", "firefox").toLowerCase())) {
                 b = false;
             } else {
                 b = true;
