@@ -16,7 +16,7 @@ import static org.openqa.selenium.remote.CapabilityType.PROXY;
  */
 
 
-public class BrowserCapabilities extends DesiredCapabilities implements BrowserService{
+public class BrowserCapabilities implements BrowserService<DesiredCapabilities>{
 
     private BrowserCapabilities(){}
 
