@@ -20,7 +20,7 @@ public class ScreenshotTestRule implements MethodRule {
     private WebDriver driver;
 
     @Override
-    public Statement apply(Statement statement, FrameworkMethod frameworkMethod, Object target) {
+    public Statement apply(final Statement statement,final FrameworkMethod frameworkMethod, final Object target) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {

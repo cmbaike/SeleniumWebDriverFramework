@@ -11,20 +11,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <selenium.version>2.45.0</selenium.version>
+        <selenium.version>2.48.2</selenium.version>
         <spring.framework.version>4.2.3.RELEASE</spring.framework.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <overwrite.binaries>true</overwrite.binaries>
-        <junit.version>4.12</junit.version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <junit.version>4.11</junit.version>
         <browser>chrome</browser>
-        <gridURL></gridURL>
+        <gridURL/>
+        <remote>false</remote>
+        <platform/>
+        <browserVersion/>
+        <proxyEnabled/>
+        <proxyHost/>
+        <proxyPort/>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
+            <artifactId>selenium-server</artifactId>
             <version>${selenium.version}</version>
             <scope>test</scope>
         </dependency>
@@ -63,8 +68,13 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.9.8</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
     <profiles>
         <profile>
             <id>standard</id>
@@ -76,11 +86,12 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
                         <configuration>
                             <source>${maven.compiler.source}</source>
                             <target>${maven.compiler.target}</target>
+                            <encoding>UTF-8</encoding>
                         </configuration>
-                        <version>2.3.2</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -94,6 +105,18 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <browser>${browser}</browser>
+                                <remoteDriver>${remote}</remoteDriver>
+                                <gridURL>${gridURL}</gridURL>
+                                <desiredPlatform>${platform}</desiredPlatform>
+                                <desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
+                                <proxyEnabled>${proxyEnabled}</proxyEnabled>
+                                <proxyHost>${proxyHost}</proxyHost>
+                                <proxyPort>${proxyPort}</proxyPort>
+                            </systemPropertyVariables>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
