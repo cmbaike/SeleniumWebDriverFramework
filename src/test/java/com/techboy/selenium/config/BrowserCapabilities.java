@@ -15,7 +15,6 @@ import static org.openqa.selenium.remote.CapabilityType.PROXY;
  * Created by christopher on 01/12/2015.
  */
 
-
 public class BrowserCapabilities implements BrowserService<DesiredCapabilities>{
 
     private BrowserCapabilities(){}

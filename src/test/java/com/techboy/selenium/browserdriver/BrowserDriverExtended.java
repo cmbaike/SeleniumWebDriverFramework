@@ -6,8 +6,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -98,8 +100,8 @@ public class BrowserDriverExtended {
          *
          * @param desiredCapabilities to be passed into the standard FirefoxDriver
          */
-        public RemoteWebDriverExtended(Capabilities desiredCapabilities) {
-            super(desiredCapabilities);
+        public RemoteWebDriverExtended (URL seleniumGridURL, Capabilities desiredCapabilities){
+            super(seleniumGridURL, desiredCapabilities);
             sizzleSelector = new SizzleSelector(this);
         }
 

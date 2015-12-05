@@ -2,6 +2,7 @@ package com.techboy.selenium.beanconfig;
 
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +34,14 @@ public class BeanConfig {
     private final Integer proxyPort = Integer.getInteger("proxyPort");
     private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
     private String workingOS = System.getProperty("os.name").toLowerCase();
+    private final String operatingSystem = System.getProperty("os.name").toUpperCase();
+    private final String systemArchitecture = System.getProperty("os.arch");
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private URL seleniumGridURL;
 
     @Bean
     public
@@ -46,6 +54,12 @@ public class BeanConfig {
      */
     @PostConstruct
     public void systemPath() throws IOException {
+
+        System.out.println(" ");
+        System.out.println("Current Operating System: " + operatingSystem);
+        System.out.println("Current Architecture: " + systemArchitecture);
+        System.out.println("Current Browser Selection: " + environment.getProperty("browser","firefox"));
+        System.out.println(" ");
 
         if (workingOS.contains("windows")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
@@ -103,25 +117,47 @@ public class BeanConfig {
         return new BrowserDriverExtended.ChromeDriverExtended(capabilities);
     }
 
+   @Bean
+    public URL seleniumGridURL() throws MalformedURLException {
+       return new URL(environment.getProperty("gridURL"));
+    }
+
+    @Bean(destroyMethod = "quit")
+    @Conditional(BeanConfig.RemoteWebDriverCondition.class)
+    @Autowired
+    public BrowserDriverExtended.RemoteWebDriverExtended remote(DesiredCapabilities capabilities) throws MalformedURLException {
+        String desiredBrowserVersion = environment.getProperty("desiredBrowserVersion");
+        String desiredPlatform = environment.getProperty("desiredPlatform");
+        if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
+            capabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
+        }
+        if (null != desiredBrowserVersion && !desiredBrowserVersion.isEmpty()) {
+            capabilities.setVersion(desiredBrowserVersion);
+        }
+        return new BrowserDriverExtended.RemoteWebDriverExtended(seleniumGridURL, capabilities);
+    }
+
+
+
     @Bean
-    @Conditional(BeanConfig.FirefoxCapablityCondition.class)
+    @Conditional(BeanConfig.FirefoxCapabilityCondition.class)
     public DesiredCapabilities firefoxDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getFirefoxCapabilities();
     }
 
     @Bean
-    @Conditional(BeanConfig.ChromeCapablityCondition.class)
+    @Conditional(BeanConfig.ChromeCapabilityCondition.class)
     public DesiredCapabilities chromeDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getChromeCapabilities();
     }
 
     @Bean
-    @Conditional(BeanConfig.IECapablityCondition.class)
+    @Conditional(BeanConfig.IECapabilityCondition.class)
     public DesiredCapabilities ieDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getIECapabilities();
     }
 
-    private static class FirefoxCapablityCondition implements Condition {
+    private static class FirefoxCapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
@@ -129,7 +165,7 @@ public class BeanConfig {
         }
     }
 
-    private static class ChromeCapablityCondition implements Condition {
+    private static class ChromeCapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
@@ -137,7 +173,7 @@ public class BeanConfig {
         }
     }
 
-    private static class IECapablityCondition implements Condition {
+    private static class IECapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
@@ -187,6 +223,14 @@ public class BeanConfig {
             ieSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("IE"));
             ieSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
             return ieSelector.get(0)&&ieSelector.get(1);
+        }
+    }
+
+    private static class RemoteWebDriverCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env = context.getEnvironment();
+            return env.getProperty("remote", "false").equalsIgnoreCase("true");
         }
     }
 
