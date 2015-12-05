@@ -3,6 +3,9 @@ package com.techboy.selenium.beanconfig;
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -10,6 +13,8 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 
@@ -26,6 +31,9 @@ public class BeanConfig {
     private final Integer proxyPort = Integer.getInteger("proxyPort");
     private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
     private String workingOS = System.getProperty("os.name").toLowerCase();
+
+    @Autowired
+    private Environment environment;
 
     @Bean
     public
@@ -70,8 +78,9 @@ public class BeanConfig {
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.IECondition.class)
-    public BrowserDriverExtended.InternetExplorerDriverExtended internetExplorer() {
-        return new BrowserDriverExtended.InternetExplorerDriverExtended(BrowserCapabilities.newInstance().getIECapabilities());
+    @Autowired
+    public BrowserDriverExtended.InternetExplorerDriverExtended internetExplorer(DesiredCapabilities capabilities) {
+        return new BrowserDriverExtended.InternetExplorerDriverExtended(capabilities);
     }
 
     /**
@@ -79,8 +88,9 @@ public class BeanConfig {
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.DefaultFirefoxCondition.class)
-    public BrowserDriverExtended.FirefoxDriverExtended firefox() {
-        return new BrowserDriverExtended.FirefoxDriverExtended(BrowserCapabilities.newInstance().getFirefoxCapabilities());
+    @Autowired
+    public BrowserDriverExtended.FirefoxDriverExtended firefox(DesiredCapabilities capabilities) {
+        return new BrowserDriverExtended.FirefoxDriverExtended(capabilities);
     }
 
     /**
@@ -88,8 +98,27 @@ public class BeanConfig {
      */
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.ChromeCondition.class)
-    public BrowserDriverExtended.ChromeDriverExtended chrome() {
-        return new BrowserDriverExtended.ChromeDriverExtended(BrowserCapabilities.newInstance().getChromeCapabilities());
+    @Autowired
+    public BrowserDriverExtended.ChromeDriverExtended chrome(DesiredCapabilities capabilities) {
+        return new BrowserDriverExtended.ChromeDriverExtended(capabilities);
+    }
+
+    @Bean
+    @Conditional(BeanConfig.DefaultFirefoxCondition.class)
+    public DesiredCapabilities firefoxDesiredCapabilities(){
+        return BrowserCapabilities.newInstance().getFirefoxCapabilities();
+    }
+
+    @Bean
+    @Conditional(BeanConfig.ChromeCondition.class)
+    public DesiredCapabilities chromeDesiredCapabilities(){
+        return BrowserCapabilities.newInstance().getChromeCapabilities();
+    }
+
+    @Bean
+   @Conditional(BeanConfig.IECondition.class)
+    public DesiredCapabilities ieDesiredCapabilities(){
+        return BrowserCapabilities.newInstance().getIECapabilities();
     }
 
     /**
@@ -99,8 +128,10 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
-
+            List<Boolean>firefoxSelector=new ArrayList<>();
+            firefoxSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")||env.getProperty("browser").isEmpty());
+            firefoxSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            return firefoxSelector.get(0)&&firefoxSelector.get(1);
         }
     }
 
@@ -111,7 +142,10 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
+            List<Boolean>chromeSelector=new ArrayList<>();
+            chromeSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("chrome"));
+            chromeSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            return chromeSelector.get(0)&&chromeSelector.get(1);
         }
 
     }
@@ -124,20 +158,14 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE")&&env.getProperty("remote", "false").equalsIgnoreCase("false");
+            List<Boolean>ieSelector=new ArrayList<>();
+            ieSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("IE"));
+            ieSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            return ieSelector.get(0)&&ieSelector.get(1);
         }
     }
 
-    /**
-     * @link Condition for creating RemoteWebDriver browser bean
-     */
-    private static class RemoteWebDriverCondition implements Condition {
-        @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
-            return env.getProperty("remote", "false").equalsIgnoreCase("true");
-        }
-    }
+
 
 }
 

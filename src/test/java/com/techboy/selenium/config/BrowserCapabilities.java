@@ -55,6 +55,8 @@ public class BrowserCapabilities implements BrowserService<DesiredCapabilities>{
         return capabilities;
     }
 
+
+
     public static BrowserCapabilities newInstance(){
         return new BrowserCapabilities();
     }
