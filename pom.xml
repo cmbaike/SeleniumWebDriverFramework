@@ -16,14 +16,6 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <junit.version>4.11</junit.version>
-        <browser>chrome</browser>
-        <gridURL/>
-        <remote>false</remote>
-        <platform/>
-        <browserVersion/>
-        <proxyEnabled/>
-        <proxyHost/>
-        <proxyPort/>
     </properties>
 
     <dependencies>
@@ -96,7 +88,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.18.1</version>
+                        <version>2.19</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -105,18 +97,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <browser>${browser}</browser>
-                                <remoteDriver>${remote}</remoteDriver>
-                                <gridURL>${gridURL}</gridURL>
-                                <desiredPlatform>${platform}</desiredPlatform>
-                                <desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
-                                <proxyEnabled>${proxyEnabled}</proxyEnabled>
-                                <proxyHost>${proxyHost}</proxyHost>
-                                <proxyPort>${proxyPort}</proxyPort>
-                            </systemPropertyVariables>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

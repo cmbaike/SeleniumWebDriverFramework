@@ -46,8 +46,6 @@ public class BeanConfig {
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
 
-
-
     /**
      * @link Initialize system path variables for browsers
      */
@@ -57,16 +55,8 @@ public class BeanConfig {
         LOG.info(" ");
         LOG.info("Current Operating System: " + operatingSystem);
         LOG.info("Current Architecture: " + systemArchitecture);
-        String browser=System.getProperty("browser");
-        String remote=System.getProperty("remote");
-        if(browser==null){
-            browser=environment.getProperty("browser","firefox");
-        }
-        if(remote==null){
-            remote=environment.getProperty("remote", "false");
-        }
-        LOG.info("Current Browser Selection: " + browser);
-        LOG.info("Use RemoteWebDriver: " + remote);
+        LOG.info("Current Browser Selection: " + environment.getProperty("browser","firefox"));
+        LOG.info("Use RemoteWebDriver: " + environment.getProperty("remote", "false"));
         LOG.info(" ");
 
         if (workingOS.contains("windows")) {
@@ -77,7 +67,6 @@ public class BeanConfig {
         } else if (workingOS.contains("linux")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/linuxChromedriver/chromedriver");
         }
-
     }
 
 
@@ -173,10 +162,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            if(browser==null){
-                 browser=env.getProperty("browser","firefox");
-            }
+            String browser=env.getProperty("browser","firefox");
             return browser.equalsIgnoreCase("firefox")||browser.isEmpty();
         }
     }
@@ -185,10 +171,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            if(browser==null){
-                browser=env.getProperty("browser","firefox");
-            }
+            String browser=env.getProperty("browser","firefox");
             return browser.equalsIgnoreCase("chrome");
         }
     }
@@ -197,10 +180,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            if(browser==null){
-                browser=env.getProperty("browser","firefox");
-            }
+            String browser=env.getProperty("browser","firefox");
             return browser.equalsIgnoreCase("IE");
         }
     }
@@ -213,15 +193,8 @@ public class BeanConfig {
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             List<Boolean>firefoxSelector=new ArrayList<>();
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            String remote=System.getProperty("remote");
-            if(browser==null){
-                browser=env.getProperty("browser","firefox");
-            }
-            if(remote==null){
-                remote=env.getProperty("remote", "false");
-            }
-
+            String browser=env.getProperty("browser","firefox");
+            String remote=env.getProperty("remote", "false");
             firefoxSelector.add(browser.equalsIgnoreCase("firefox") || browser.isEmpty());
             firefoxSelector.add(remote.equalsIgnoreCase("false") || remote.isEmpty());
             return firefoxSelector.get(0)&&firefoxSelector.get(1);
@@ -236,14 +209,8 @@ public class BeanConfig {
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             List<Boolean>chromeSelector=new ArrayList<>();
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            String remote=System.getProperty("remote");
-            if(browser==null){
-                browser=env.getProperty("browser","firefox");
-            }
-            if(remote==null){
-                remote=env.getProperty("remote", "false");
-            }
+            String browser=env.getProperty("browser","firefox");
+            String remote=env.getProperty("remote", "false");
             chromeSelector.add(browser.equalsIgnoreCase("chrome"));
             chromeSelector.add(remote.equalsIgnoreCase("false") || remote.isEmpty());
             return chromeSelector.get(0)&&chromeSelector.get(1);
@@ -259,14 +226,8 @@ public class BeanConfig {
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             List<Boolean>ieSelector=new ArrayList<>();
             Environment env=context.getEnvironment();
-            String browser=System.getProperty("browser");
-            String remote=System.getProperty("remote");
-            if(browser==null){
-                browser=env.getProperty("browser","firefox");
-            }
-            if(remote==null){
-                remote=env.getProperty("remote", "false");
-            }
+            String browser=env.getProperty("browser","firefox");
+            String remote=env.getProperty("remote", "false");
             ieSelector.add(browser.equalsIgnoreCase("IE"));
             ieSelector.add(remote.equalsIgnoreCase("false") || remote.isEmpty());
             return ieSelector.get(0)&&ieSelector.get(1);
@@ -277,10 +238,7 @@ public class BeanConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env=context.getEnvironment();
-            String remote=System.getProperty("remote");
-            if(remote==null){
-                remote=env.getProperty("remote", "false");
-            }
+            String remote=env.getProperty("remote", "false");
             return remote.equalsIgnoreCase("true");
         }
     }
