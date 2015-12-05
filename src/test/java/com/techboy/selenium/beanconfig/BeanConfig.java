@@ -104,22 +104,47 @@ public class BeanConfig {
     }
 
     @Bean
-    @Conditional(BeanConfig.DefaultFirefoxCondition.class)
+    @Conditional(BeanConfig.FirefoxCapablityCondition.class)
     public DesiredCapabilities firefoxDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getFirefoxCapabilities();
     }
 
     @Bean
-    @Conditional(BeanConfig.ChromeCondition.class)
+    @Conditional(BeanConfig.ChromeCapablityCondition.class)
     public DesiredCapabilities chromeDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getChromeCapabilities();
     }
 
     @Bean
-   @Conditional(BeanConfig.IECondition.class)
+    @Conditional(BeanConfig.IECapablityCondition.class)
     public DesiredCapabilities ieDesiredCapabilities(){
         return BrowserCapabilities.newInstance().getIECapabilities();
     }
+
+    private static class FirefoxCapablityCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env = context.getEnvironment();
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")||env.getProperty("browser").isEmpty();
+        }
+    }
+
+    private static class ChromeCapablityCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env = context.getEnvironment();
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome");
+        }
+    }
+
+    private static class IECapablityCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env = context.getEnvironment();
+            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE");
+        }
+    }
+
 
     /**
      * @link Condition for creating firefox browser bean as default
