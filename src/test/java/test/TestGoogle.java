@@ -1,6 +1,8 @@
 package test;
 
 import com.techboy.selenium.beanconfig.BeanConfig;
+import com.techboy.selenium.listeners.ScreenshotTestRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -25,19 +27,14 @@ public class TestGoogle {
 @Autowired
 private WebDriver driver;
 
+ @Rule
+ @Autowired
+ public ScreenshotTestRule screenshotTestRule;
+
     @Test
     public void googleCheeseExample() throws Exception {
-        // Create a new WebDriver instance
-        // Notice that the remainder of the code relies on the interface,
-        // not the implementation.
-        // And now use this to visit Google
         driver.get("http://www.google.com");
-        // Alternatively the same thing can be done like this
-        // driver.navigate().to("http://www.google.com");
-
-        // Find the text input element by its name
         WebElement element = driver.findElement(By.name("q"));
-
         // Enter something to search for
         element.clear();
         element.sendKeys("Cheese!");

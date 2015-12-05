@@ -2,11 +2,11 @@ package com.techboy.selenium.beanconfig;
 
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
+import com.techboy.selenium.listeners.ScreenshotTestRule;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -28,6 +28,11 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 @PropertySource("classpath:app.properties")
 @Configuration
 public class BeanConfig {
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private URL seleniumGridURL;
 
     private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
     private final String proxyHostname = System.getProperty("proxyHost");
@@ -37,15 +42,10 @@ public class BeanConfig {
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
 
-    @Autowired
-    private Environment environment;
-
-    @Autowired
-    private URL seleniumGridURL;
 
     @Bean
     public
-    static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+    static PropertySourcesPlaceholderConfigurer placeholderConfigurer(){
         return new PropertySourcesPlaceholderConfigurer();
     }
 
@@ -122,6 +122,11 @@ public class BeanConfig {
        return new URL(environment.getProperty("gridURL"));
     }
 
+    @Bean
+    public ScreenshotTestRule screenshotTestRule(){
+        return new ScreenshotTestRule();
+    }
+
     @Bean(destroyMethod = "quit")
     @Conditional(BeanConfig.RemoteWebDriverCondition.class)
     @Autowired
@@ -136,8 +141,6 @@ public class BeanConfig {
         }
         return new BrowserDriverExtended.RemoteWebDriverExtended(seleniumGridURL, capabilities);
     }
-
-
 
     @Bean
     @Conditional(BeanConfig.FirefoxCapabilityCondition.class)
@@ -181,7 +184,6 @@ public class BeanConfig {
         }
     }
 
-
     /**
      * @link Condition for creating firefox browser bean as default
      */
@@ -208,7 +210,6 @@ public class BeanConfig {
             chromeSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
             return chromeSelector.get(0)&&chromeSelector.get(1);
         }
-
     }
 
     /**
@@ -233,9 +234,6 @@ public class BeanConfig {
             return env.getProperty("remote", "false").equalsIgnoreCase("true");
         }
     }
-
-
-
 }
 
 
