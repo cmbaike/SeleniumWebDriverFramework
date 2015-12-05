@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes=BeanConfig.class)
 public class TestGoogle {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(TestGoogle.class);
 
 @Autowired
 private WebDriver driver;
@@ -43,7 +46,7 @@ private WebDriver driver;
         element.submit();
 
         // Check the title of the page
-        System.out.println("Page title is: " + driver.getTitle());
+        LOG.info("Page title is: " + driver.getTitle());
 
         // Google's search is rendered dynamically with JavaScript.
         // Wait for the page to load, timeout after 10 seconds
@@ -54,7 +57,7 @@ private WebDriver driver;
         });
 
         // Should see: "cheese! - Google Search"
-        System.out.println("Page title is: " + driver.getTitle());
+        LOG.info("Page title is: " + driver.getTitle());
     }
 
     @Test
@@ -80,7 +83,7 @@ private WebDriver driver;
         element.submit();
 
         // Check the title of the page
-        System.out.println("Page title is: " + driver.getTitle());
+        LOG.info("Page title is: " + driver.getTitle());
 
         // Google's search is rendered dynamically with JavaScript.
         // Wait for the page to load, timeout after 10 seconds
@@ -91,6 +94,6 @@ private WebDriver driver;
         });
 
         // Should see: "cheese! - Google Search"
-        System.out.println("Page title is: " + driver.getTitle());
+        LOG.info("Page title is: " + driver.getTitle());
     }
 }

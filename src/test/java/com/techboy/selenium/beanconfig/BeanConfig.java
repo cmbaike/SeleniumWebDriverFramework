@@ -6,9 +6,10 @@ import com.techboy.selenium.listeners.ScreenshotTestRule;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -28,12 +29,15 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 @PropertySource("classpath:app.properties")
 @Configuration
 public class BeanConfig {
+
     @Autowired
     private Environment environment;
 
     @Autowired
     private URL seleniumGridURL;
 
+
+    protected static final Logger LOG = LoggerFactory.getLogger(BeanConfig.class);
     private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
     private final String proxyHostname = System.getProperty("proxyHost");
     private final Integer proxyPort = Integer.getInteger("proxyPort");
@@ -41,13 +45,9 @@ public class BeanConfig {
     private String workingOS = System.getProperty("os.name").toLowerCase();
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
+    private static String browser=System.getProperty("browser","firefox");
+    private static String remoteEnabled=System.getProperty("remote","false");
 
-
-    @Bean
-    public
-    static PropertySourcesPlaceholderConfigurer placeholderConfigurer(){
-        return new PropertySourcesPlaceholderConfigurer();
-    }
 
     /**
      * @link Initialize system path variables for browsers
@@ -55,11 +55,11 @@ public class BeanConfig {
     @PostConstruct
     public void systemPath() throws IOException {
 
-        System.out.println(" ");
-        System.out.println("Current Operating System: " + operatingSystem);
-        System.out.println("Current Architecture: " + systemArchitecture);
-        System.out.println("Current Browser Selection: " + environment.getProperty("browser","firefox"));
-        System.out.println(" ");
+        LOG.info(" ");
+        LOG.info("Current Operating System: " + operatingSystem);
+        LOG.info("Current Architecture: " + systemArchitecture);
+        LOG.info("Current Browser Selection: " + browser);
+        LOG.info(" ");
 
         if (workingOS.contains("windows")) {
             System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
@@ -71,6 +71,7 @@ public class BeanConfig {
         }
 
     }
+
 
     /**
      * @link Proxy bean generator
@@ -131,8 +132,8 @@ public class BeanConfig {
     @Conditional(BeanConfig.RemoteWebDriverCondition.class)
     @Autowired
     public BrowserDriverExtended.RemoteWebDriverExtended remote(DesiredCapabilities capabilities) throws MalformedURLException {
-        String desiredBrowserVersion = environment.getProperty("desiredBrowserVersion");
-        String desiredPlatform = environment.getProperty("desiredPlatform");
+        String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
+        String desiredPlatform = System.getProperty("desiredPlatform");
         if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
             capabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
         }
@@ -163,24 +164,21 @@ public class BeanConfig {
     private static class FirefoxCapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")||env.getProperty("browser").isEmpty();
+            return browser.equalsIgnoreCase("firefox")||System.getProperty("browser").isEmpty();
         }
     }
 
     private static class ChromeCapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("chrome");
+            return browser.equalsIgnoreCase("chrome");
         }
     }
 
     private static class IECapabilityCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
-            return env.getProperty("browser", "firefox").equalsIgnoreCase("IE");
+            return browser.equalsIgnoreCase("IE");
         }
     }
 
@@ -190,10 +188,9 @@ public class BeanConfig {
     private static class DefaultFirefoxCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
             List<Boolean>firefoxSelector=new ArrayList<>();
-            firefoxSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("firefox")||env.getProperty("browser").isEmpty());
-            firefoxSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            firefoxSelector.add(browser.equalsIgnoreCase("firefox") || browser.isEmpty());
+            firefoxSelector.add(remoteEnabled.equalsIgnoreCase("false") || System.getProperty("remote").isEmpty());
             return firefoxSelector.get(0)&&firefoxSelector.get(1);
         }
     }
@@ -204,10 +201,9 @@ public class BeanConfig {
     private static class ChromeCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
             List<Boolean>chromeSelector=new ArrayList<>();
-            chromeSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("chrome"));
-            chromeSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            chromeSelector.add(browser.equalsIgnoreCase("chrome"));
+            chromeSelector.add(remoteEnabled.equalsIgnoreCase("false") || System.getProperty("remote").isEmpty());
             return chromeSelector.get(0)&&chromeSelector.get(1);
         }
     }
@@ -219,10 +215,9 @@ public class BeanConfig {
     private static class IECondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
             List<Boolean>ieSelector=new ArrayList<>();
-            ieSelector.add(env.getProperty("browser", "firefox").equalsIgnoreCase("IE"));
-            ieSelector.add(env.getProperty("remote", "false").equalsIgnoreCase("false")||env.getProperty("remote").isEmpty());
+            ieSelector.add(browser.equalsIgnoreCase("IE"));
+            ieSelector.add(remoteEnabled.equalsIgnoreCase("false") || System.getProperty("remote").isEmpty());
             return ieSelector.get(0)&&ieSelector.get(1);
         }
     }
@@ -230,8 +225,7 @@ public class BeanConfig {
     private static class RemoteWebDriverCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            Environment env = context.getEnvironment();
-            return env.getProperty("remote", "false").equalsIgnoreCase("true");
+            return remoteEnabled.equalsIgnoreCase("true");
         }
     }
 }
