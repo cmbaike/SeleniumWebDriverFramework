@@ -13,18 +13,14 @@ _All dependencies will be downloaded and specific driver executable dependencies
 
 _To run any unit tests that test your Selenium framework you just need to ensure that all unit test class contains Spring test annotation_
 
-@SuppressWarnings("SpringJavaAutowiringInspection")
-
-   @RunWith(SpringJUnit4ClassRunner.class)
-   
-   @ContextConfiguration(classes=BeanConfig.class)
-   
-   public class TestGoogle {
-   
-   ....
-   
-   }
-   
+<d1>
+<dd>@SuppressWarnings("SpringJavaAutowiringInspection")</dd>
+<dd>@RunWith(SpringJUnit4ClassRunner.class)</dd>
+<dd>@ContextConfiguration(classes=BeanConfig.class)</dd>
+<dd>public class TestGoogle {</dd>
+<dd> ....<dd>
+<dd>}<dd>
+  <d1> 
 
 _You don't need to do this:_
  
