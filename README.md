@@ -61,4 +61,4 @@ Note: You can name your test class whatever you want.
 - -DproxyHost=localhost
 - -DproxyPort=8080
 
-_If the tests fail screenshots will be saved in ${project.basedir}/target/screenshots
+_If the tests fail screenshots will be saved in ${project.basedir}/target/screenshots_
