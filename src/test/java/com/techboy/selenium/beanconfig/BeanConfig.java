@@ -1,10 +1,12 @@
 package com.techboy.selenium.beanconfig;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
 import com.techboy.selenium.listeners.ScreenshotTestRule;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +38,7 @@ public class BeanConfig {
     @Autowired
     private URL seleniumGridURL;
 
-
     protected static final Logger LOG = LoggerFactory.getLogger(BeanConfig.class);
-    private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
-    private final String proxyHostname = System.getProperty("proxyHost");
-    private final Integer proxyPort = Integer.getInteger("proxyPort");
-    private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
     private String workingOS = System.getProperty("os.name").toLowerCase();
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
@@ -69,21 +66,6 @@ public class BeanConfig {
         }
     }
 
-
-    /**
-     * @link Proxy bean generator
-     */
-    @Bean
-    public Proxy proxy() {
-        Proxy proxy;
-        if (proxyEnabled) {
-            proxy = new Proxy();
-            proxy.setProxyType(MANUAL);
-            proxy.setHttpProxy(proxyDetails);
-            proxy.setSslProxy(proxyDetails);
-        }
-        return new Proxy();
-    }
 
     /**
      * @link internetExplorer bean generator
@@ -142,7 +124,14 @@ public class BeanConfig {
 
     @Bean
     @Conditional(BeanConfig.FirefoxCapabilityCondition.class)
-    public DesiredCapabilities firefoxDesiredCapabilities(){
+    public FirefoxProfile firefoxProfile(){
+        return new FirefoxProfile();
+    }
+
+
+    @Bean
+    @Conditional(BeanConfig.FirefoxCapabilityCondition.class)
+    public DesiredCapabilities firefoxDesiredCapabilities() throws IOException {
         return BrowserCapabilities.newInstance().getFirefoxCapabilities();
     }
 
