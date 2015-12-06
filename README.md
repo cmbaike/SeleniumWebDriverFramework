@@ -7,13 +7,13 @@ A maven Selenium framework that is built which allows Spring to manage dependenc
 3. CD into project directory
 4. mvn clean verify
 
--All dependencies will be downloaded and specific driver executable dependencies are already installed in project directory
+#####All dependencies will be downloaded and specific driver executable dependencies are already installed in project directory
 
 ##What I Should do to run my test
 
--To run any unit tests that test your Selenium framework you just need to ensure that all unit test class contains Spring test annotation.
+#####To run any unit tests that test your Selenium framework you just need to ensure that all unit test class contains Spring test annotation.
 
-- -@SuppressWarnings("SpringJavaAutowiringInspection")
+_@SuppressWarnings("SpringJavaAutowiringInspection")
    @RunWith(SpringJUnit4ClassRunner.class)
    @ContextConfiguration(classes=BeanConfig.class)
    public class TestGoogle {
