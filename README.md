@@ -22,11 +22,11 @@ _To run any unit tests that test your Selenium framework you just need to ensure
 <dd>}<dd>
   <d1> 
 
-_You don't need to do this:_
+- ###You don't need to do this:_
  
 <d1><dd>WebDriver driver=new WebDriver();</dd></d1>
    
-_To create a WebDriver instance :_ 
+- ###To create a WebDriver instance :_ 
 
 <d1>
 <dd>@Autowired</dd>
