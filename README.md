@@ -35,7 +35,7 @@ _To run any unit tests that test your Selenium framework you just need to ensure
 <dd>private WebDriver driver</dd>
 </d1>
 
--A webDriver object will be wired automatically_
+- A webDriver object will be wired automatically
   
 Note: You can name your test class whatever you want.
 
