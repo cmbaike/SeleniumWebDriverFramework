@@ -53,7 +53,7 @@ Note: You can name your test class whatever you want.
 - -DseleniumGridURL=http://{username}:{accessKey}@ondemand.saucelabs.com:80/wd/hub 
 - -Dplatform=xp 
 - -Dbrowser=firefox 
-- -DbrowserVersion=33
+- -DbrowserVersion=42
 
 -You can also specify a proxy to use
 
