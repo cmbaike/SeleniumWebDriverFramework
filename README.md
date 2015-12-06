@@ -24,14 +24,14 @@ _To run any unit tests that test your Selenium framework you just need to ensure
 
 _You don't need to do this:_
  
-   WebDriver driver=new WebDriver();
+<d1><dd>WebDriver driver=new WebDriver();</dd></d1>
    
 _To create a WebDriver instance :_ 
 
-@Autowired
-
-  private WebDriver driver
-
+<d1>
+<dd>@Autowired</dd>
+<dd>private WebDriver driver</dd>
+</d1>
 _A webDriver object will be wired automatically_
   
 Note: You can name your test class whatever you want.
