@@ -13,13 +13,20 @@ A maven Selenium framework that is built which allows Spring to manage dependenc
 
 -To run any unit tests that test your Selenium framework you just need to ensure that all unit test class contains Spring test annotation.
 
-@SuppressWarnings("SpringJavaAutowiringInspection")
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=BeanConfig.class)
-public class TestGoogle {
-....
-}
+---------@SuppressWarnings("SpringJavaAutowiringInspection")
+---------@RunWith(SpringJUnit4ClassRunner.class)
+---------@ContextConfiguration(classes=BeanConfig.class)
+---------public class TestGoogle {
+-----------....
+---------}
 
+- You don't need to do this: WebDriver driver=new WebDriver();
+- To create a WebDriver instance : 
+---------@Autowired
+---------private WebDriver driver
+
+-A webDriver object will be wired automatically
+  
 Note: You can name your test class whatever you want.
 
 #Further Information
