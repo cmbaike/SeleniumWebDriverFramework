@@ -48,7 +48,7 @@ private WebDriver driver;
         // Check the title of the page
         LOG.info("Page title is: " + driver.getTitle());
 
-        // Google's search is rendered dynamically with JavaScript.
+        // TestGoogle's search is rendered dynamically with JavaScript.
         // Wait for the page to load, timeout after 10 seconds
         (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
@@ -56,7 +56,7 @@ private WebDriver driver;
             }
         });
 
-        // Should see: "cheese! - Google Search"
+        // Should see: "cheese! - TestGoogle Search"
         LOG.info("Page title is: " + driver.getTitle());
     }
 
@@ -67,7 +67,7 @@ private WebDriver driver;
         // not the implementation.
 
 
-        // And now use this to visit Google
+        // And now use this to visit TestGoogle
         driver.get("http://www.google.com");
         // Alternatively the same thing can be done like this
         // driver.navigate().to("http://www.google.com");
@@ -85,7 +85,7 @@ private WebDriver driver;
         // Check the title of the page
         LOG.info("Page title is: " + driver.getTitle());
 
-        // Google's search is rendered dynamically with JavaScript.
+        // TestGoogle's search is rendered dynamically with JavaScript.
         // Wait for the page to load, timeout after 10 seconds
         (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
@@ -93,7 +93,7 @@ private WebDriver driver;
             }
         });
 
-        // Should see: "cheese! - Google Search"
+        // Should see: "cheese! - TestGoogle Search"
         LOG.info("Page title is: " + driver.getTitle());
     }
 }
