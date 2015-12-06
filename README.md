@@ -1,4 +1,4 @@
-##SeleniumWebDriverFramework
+#SeleniumWebDriverFramework
 
 A maven Selenium framework that is built which allows Spring to manage dependency via dependency injection.
 
@@ -9,7 +9,7 @@ A maven Selenium framework that is built which allows Spring to manage dependenc
 
 -All dependencies will be downloaded and specific driver executable dependencies are already installed in project directory
 
-#What I Should do to run my test
+##What I Should do to run my test
 
 -To run any unit tests that test your Selenium framework you just need to ensure that all unit test class contains Spring test annotation.
 
@@ -33,7 +33,7 @@ A maven Selenium framework that is built which allows Spring to manage dependenc
   
 Note: You can name your test class whatever you want.
 
-#Further Information
+##Further Information
 
 - -Dbrowser=firefox
 - -Dbrowser=chrome
