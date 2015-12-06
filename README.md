@@ -22,17 +22,20 @@ _To run any unit tests that test your Selenium framework you just need to ensure
 <dd>}<dd>
   <d1> 
 
-- ###You don't need to do this:_
+- You don't need to do this:
  
-<d1><dd>WebDriver driver=new WebDriver();</dd></d1>
+<d1>
+<dt>WebDriver driver=new WebDriver()</dt>
+</d1>
    
-- ###To create a WebDriver instance :_ 
+- To create a WebDriver instance :
 
 <d1>
 <dd>@Autowired</dd>
 <dd>private WebDriver driver</dd>
 </d1>
-_A webDriver object will be wired automatically_
+
+-A webDriver object will be wired automatically_
   
 Note: You can name your test class whatever you want.
 
@@ -42,9 +45,9 @@ Note: You can name your test class whatever you want.
 - -Dbrowser=chrome
 - -Dbrowser=ie
 
-_You don't need to download the IEDriverServer, or chromedriver binaries, they are already added to the project directory._
+-You don't need to download the IEDriverServer, or chromedriver binaries, they are already added to the project directory._
 
-_You can specify a grid to connect to where you can choose your browser, browser version and platform:_
+-You can specify a grid to connect to where you can choose your browser, browser version and platform:_
 
 - -Dremote=true 
 - -DseleniumGridURL=http://{username}:{accessKey}@ondemand.saucelabs.com:80/wd/hub 
@@ -52,7 +55,7 @@ _You can specify a grid to connect to where you can choose your browser, browser
 - -Dbrowser=firefox 
 - -DbrowserVersion=33
 
-_You can also specify a proxy to use_
+-You can also specify a proxy to use_
 
 - -DproxyEnabled=true
 - -DproxyHost=localhost
