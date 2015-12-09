@@ -1,11 +1,8 @@
 package com.techboy.selenium.beanconfig;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
-import com.techboy.selenium.listeners.ScreenshotTestRule;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
@@ -22,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 
 /**
  * {@link} BeanConfig config class for all bean creation
@@ -35,7 +31,7 @@ public class BeanConfig {
     @Autowired
     private Environment environment;
 
-    @Autowired
+    @Autowired(required = false)
     private URL seleniumGridURL;
 
     protected static final Logger LOG = LoggerFactory.getLogger(BeanConfig.class);
@@ -97,14 +93,10 @@ public class BeanConfig {
         return new BrowserDriverExtended.ChromeDriverExtended(capabilities);
     }
 
-   @Bean
-    public URL seleniumGridURL() throws MalformedURLException {
-       return new URL(environment.getProperty("gridURL"));
-    }
-
     @Bean
-    public ScreenshotTestRule screenshotTestRule(){
-        return new ScreenshotTestRule();
+    @Conditional(BeanConfig.gridURLCondition.class)
+    public URL seleniumGridURL() throws MalformedURLException {
+        return new URL(environment.getProperty("gridURL"));
     }
 
     @Bean(destroyMethod = "quit")
@@ -231,6 +223,15 @@ public class BeanConfig {
             return remote.equalsIgnoreCase("true");
         }
     }
+
+    private static class gridURLCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            Environment env=context.getEnvironment();
+            return !env.getProperty("gridURL").isEmpty();
+        }
+    }
+
 }
 
 

@@ -7,6 +7,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +15,7 @@ import java.io.FileOutputStream;
 /**
  * Created by christopher on 05/12/15.
  */
+@Component
 public class ScreenshotTestRule implements MethodRule {
 
     @Autowired

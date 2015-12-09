@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=BeanConfig.class)
+@ContextConfiguration(classes={BeanConfig.class,ScreenshotTestRule.class})
 public class TestGoogle {
 
     protected static final Logger LOG = LoggerFactory.getLogger(TestGoogle.class);
