@@ -3,12 +3,13 @@ package com.techboy.selenium.beanconfig;
 import com.techboy.selenium.browserdriver.BrowserDriverExtended;
 import com.techboy.selenium.config.BrowserCapabilities;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -23,8 +24,7 @@ import java.util.List;
 /**
  * {@link} BeanConfig config class for all bean creation
  */
-
-@PropertySource("classpath:app.properties")
+@PropertySource({"classpath:app.properties"})
 @Configuration
 public class BeanConfig {
 
@@ -35,33 +35,68 @@ public class BeanConfig {
     private URL seleniumGridURL;
 
     protected static final Logger LOG = LoggerFactory.getLogger(BeanConfig.class);
-    private String workingOS = System.getProperty("os.name").toLowerCase();
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
+
+    @Value("${linux_chromepath}")
+    private String linux_chromepath;
+
+    @Value("${mac_chromepath}")
+    private String mac_chromepath;
+
+    @Value("${win_chromepath}")
+    private String win_chromepath;
+
+    @Value("${win_iepath}")
+    private String win_iepath;
+
+    @Value("${browser}")
+    private String browser;
+
+    @Value("${remote}")
+    private String remote;
+
+    @Value("${gridURL}")
+    private String gridURL;
+
+    @Value("${desiredBrowserVersion}")
+    private String desiredBrowserVersion;
+
+    @Value("${desiredPlatform}")
+    private String desiredPlatform;
 
     /**
      * @link Initialize system path variables for browsers
      */
     @PostConstruct
-    public void systemPath() throws IOException {
+    public void getEnvironmentInfo() throws IOException {
 
         LOG.info(" ");
         LOG.info("Current Operating System: " + operatingSystem);
         LOG.info("Current Architecture: " + systemArchitecture);
-        LOG.info("Current Browser Selection: " + environment.getProperty("browser","firefox"));
-        LOG.info("Use RemoteWebDriver: " + environment.getProperty("remote", "false"));
+        LOG.info("Current Browser Selection: " + browser);
+        LOG.info("Use RemoteWebDriver: " + remote);
         LOG.info(" ");
 
-        if (workingOS.contains("windows")) {
-            System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/windowsChromedriver/chromedriver.exe");
-            System.setProperty("webdriver.ie.driver", "selenium_browser_drivers\\IEDriverServer.exe");
-        } else if (workingOS.contains("mac")) {
-            System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/macChromedriver/chromedriver");
-        } else if (workingOS.contains("linux")) {
-            System.setProperty("webdriver.chrome.driver", "selenium_browser_drivers/linuxChromedriver/chromedriver");
-        }
     }
 
+    @PostConstruct
+    public void setDriverPath() throws IOException {
+        switch (browser.toUpperCase()){
+            case "CHROME":
+                if (operatingSystem.contains("WINDOWS")) {
+                    System.setProperty("webdriver.chrome.driver",win_chromepath);
+                } else if (operatingSystem.contains("MAC")) {
+                    System.setProperty("webdriver.chrome.driver",mac_chromepath);
+                } else if (operatingSystem.contains("LINUX")) {
+                    System.setProperty("webdriver.chrome.driver",linux_chromepath );
+                }
+                break;
+            case "IE":
+                System.setProperty("webdriver.ie.driver",win_iepath);
+                break;
+        }
+    }
 
     /**
      * @link internetExplorer bean generator
@@ -103,8 +138,8 @@ public class BeanConfig {
     @Conditional(BeanConfig.RemoteWebDriverCondition.class)
     @Autowired
     public BrowserDriverExtended.RemoteWebDriverExtended remote(DesiredCapabilities capabilities) throws MalformedURLException {
-        String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
-        String desiredPlatform = System.getProperty("desiredPlatform");
+        String desiredPlatform=environment.getProperty("desiredPlatform");
+        String desiredBrowserVersion=environment.getProperty("desiredBrowserVersion");
         if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
             capabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
         }
@@ -112,12 +147,6 @@ public class BeanConfig {
             capabilities.setVersion(desiredBrowserVersion);
         }
         return new BrowserDriverExtended.RemoteWebDriverExtended(seleniumGridURL, capabilities);
-    }
-
-    @Bean
-    @Conditional(BeanConfig.FirefoxCapabilityCondition.class)
-    public FirefoxProfile firefoxProfile(){
-        return new FirefoxProfile();
     }
 
 
@@ -232,10 +261,8 @@ public class BeanConfig {
         }
     }
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }
-
-
-
-
-
-
